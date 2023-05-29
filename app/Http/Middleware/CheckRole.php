@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
+class CheckRole
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param String $role
+     */
+    public function handle(Request $request, Closure $next,$role): Response
+    {
+        if($role == 'admin' && auth()->user()->role != 'admin'){
+            abort(code:403);
+        }
+        if($role == 'user' && auth()->user()->role !='user'){
+            abort(code:403);
+        }
+        if($role=='juri' && auth()->user()->role !='juri'){
+            abort(code:403);
+        }
+        return $next($request);
+    }
+}
